@@ -37,11 +37,12 @@ public class SFMovieLocator {
 			}
 		});
 
-		get(new Route("/movie/:title") {
+		post(new Route("/movie/:title") {
 			@Override
 			public Object handle(Request request, Response response) {
 				ArrayList<JSONObject> movieInfo = model.getMovieByTitle(
 						request.params(":title"), jedis);
+				System.out.println("movie info: " + movieInfo);
 				return movieInfo;
 			}
 		});

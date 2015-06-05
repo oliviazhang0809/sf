@@ -63,16 +63,11 @@
              $("#search").autocomplete({
                  source: function(request, response) {
                     $.ajax({
-                        url:  "/autocomplete",
+                        url:  "/autocomplete/" + $("#search").val(),
                         type: "GET",
-                        data: {
-                            prefix: $("#search").val()
-                        },
-                        success: function(results) {
-                            alert("fat dog");
-                             var data = $(results["data"]);
-                             alert(data);
-                             $("#search").autocomplete("display", data, false);
+                        success: function(data) {
+                             var pata = JSON.parse(data);
+                             $("#search").autocomplete("display", pata, false);
                          }
                     });
                  },
@@ -80,12 +75,10 @@
                      select: function(item) {
                         var updated_info = false;
                         $.ajax({
-                        url:  "movie",
-                        data: {
-                            title: item
-                        },
+                        url:  "/movie/" + item,
+                        type: "POST",
                         success: function(results) {
-                             var data = $(results["data"]);
+                             var data = JSON.parse(results);
                              $("#map").gmap3({
                                  clear: "marker",
                              });
