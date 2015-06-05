@@ -1,11 +1,29 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 
+import org.json.simple.JSONObject;
+
 import redis.clients.jedis.Jedis;
 
+import com.cedarsoftware.util.io.JsonReader;
+
 public class Model {
-	public static Set<String> getMovieByTitle(String title, Jedis jedis) {
-		return jedis.smembers(title);
+	public static Jedis jedis = new Jedis("localhost");
+
+	public static ArrayList<JSONObject> getMovieByTitle(String title,
+			Jedis jedis) {
+		Set<String> res = jedis.smembers(title);
+		ArrayList<JSONObject> ls = new ArrayList<JSONObject>();
+		for (String str : res) {
+			try {
+				ls.add((JSONObject) JsonReader.jsonToJava(str));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return ls;
 	}
 
 	public static ArrayList<String> getAutoCompleteResult(Jedis jedis,
@@ -24,6 +42,7 @@ public class Model {
 				if (current == null || current.size() == 0) {
 					break;
 				}
+
 				for (String entry : current) {
 					int minLen = Math.min(entry.length(), prefix.length());
 					if (!entry.substring(0, minLen).equalsIgnoreCase(

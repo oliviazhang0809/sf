@@ -47,6 +47,7 @@ public class DataImporter {
 		// only add data data with location info -- coz we want to show on map
 		if (keyset.contains("locations") && movie.get("locations") != null) {
 			try {
+
 				String json = JsonWriter.objectToJson(movie);
 				jedis.sadd((String) movie.get("title"), json);
 			} catch (IOException e) {
