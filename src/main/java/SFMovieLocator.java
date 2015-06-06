@@ -19,31 +19,24 @@ public class SFMovieLocator {
 	public static void main(String[] args) {
 		Spark.staticFileLocation("/web");
 
-		get(new Route("/test/:prefix") {
-			@Override
-			public Object handle(Request request, Response response) {
-				System.out.println("dog dog dog");
-				return "hello dog";
-			}
-		});
-
 		get(new Route("/autocomplete/:prefix") {
 			@Override
 			public Object handle(Request request, Response response) {
 				ArrayList<String> res = model.getAutoCompleteResult(jedis,
-						"title", request.params(":prefix"), 10);
+						"title", request.params(":prefix"), 8);
 				String json = new Gson().toJson(res);
 				return json;
 			}
 		});
 
-		post(new Route("/movie/:title") {
+		Spark.post(new Route("/movie") {
 			@Override
 			public Object handle(Request request, Response response) {
-				ArrayList<JSONObject> movieInfo = model.getMovieByTitle(
-						request.params(":title"), jedis);
-				System.out.println("movie info: " + movieInfo);
-				return movieInfo;
+				String title = request.body().split("=")[1].replace("+", " ");
+				ArrayList<JSONObject> movieInfo = model.getMovieByTitle(title,
+						jedis);
+				String json = new Gson().toJson(movieInfo);
+				return json;
 			}
 		});
 	}

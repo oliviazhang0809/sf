@@ -9,7 +9,6 @@ import redis.clients.jedis.Jedis;
 import com.cedarsoftware.util.io.JsonReader;
 
 public class Model {
-	public static Jedis jedis = new Jedis("localhost");
 
 	public static ArrayList<JSONObject> getMovieByTitle(String title,
 			Jedis jedis) {
@@ -17,7 +16,8 @@ public class Model {
 		ArrayList<JSONObject> ls = new ArrayList<JSONObject>();
 		for (String str : res) {
 			try {
-				ls.add((JSONObject) JsonReader.jsonToJava(str));
+				ls.add((JSONObject) JsonReader.jsonToJava(str)); // deserialize
+																	// string
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

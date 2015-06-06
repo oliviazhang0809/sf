@@ -75,18 +75,20 @@
                      select: function(item) {
                         var updated_info = false;
                         $.ajax({
-                        url:  "/movie/" + item,
+                        url:  "/movie",
                         type: "POST",
+                        data: {
+                            title: item
+                        },
                         success: function(results) {
                              var data = JSON.parse(results);
                              $("#map").gmap3({
                                  clear: "marker",
                              });
-                             var movie_item = jQuery.parseJSON(data[0]);
+                             var movie_item = data[0]; // info for one movie
                              update_movie_info(movie_item);
                              $(data).each(function(i, item) {
-                                 var msg = jQuery.parseJSON(item);
-                                 geocode = msg["geocode"];
+                                 geocode = item["geocode"];
                                  $("#map").gmap3({
                                      marker: {
                                          latLng: geocode.geometry.location
